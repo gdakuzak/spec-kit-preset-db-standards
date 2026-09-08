@@ -1,0 +1,39 @@
+schema_version: "1.0"
+
+preset:
+  id: "db-standards"
+  name: "Database Standards"
+  version: "0.1.0"
+  description: "Database conventions for spec-driven work: naming, data-model design, performance (indexes, N+1), and a schema-review checklist. ORM-agnostic."
+  author: "Guilherme Dakuzaku"
+  repository: "https://github.com/gdakuzak/spec-kit-preset-db-standards"
+  license: "MIT"
+
+requires:
+  speckit_version: ">=0.1.0"
+
+provides:
+  templates:
+    - type: "template"
+      name: "spec-template"
+      file: "templates/spec-addendum.md"
+      description: "Data requirements section for the feature spec"
+      strategy: "append"
+
+    - type: "template"
+      name: "plan-template"
+      file: "templates/plan-addendum.md"
+      description: "Data-model design, naming conventions, and performance rules (indexes, N+1)"
+      strategy: "append"
+
+    - type: "template"
+      name: "tasks-template"
+      file: "templates/tasks-addendum.md"
+      description: "Schema-review checklist to run before merging a migration"
+      strategy: "append"
+
+tags:
+  - "database"
+  - "standards"
+  - "data-modeling"
+  - "performance"
