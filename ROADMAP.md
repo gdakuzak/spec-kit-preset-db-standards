@@ -5,7 +5,7 @@ tracks what's done and what's next so we can pick up between sessions.
 
 ## Shipped
 
-See `CHANGELOG.md` for the per-version breakdown. Current: **v0.6.0**.
+See `CHANGELOG.md` for the per-version breakdown. Current: **v0.6.1**.
 
 - **speckit.constitution** (command, append) → requires confirming the target
   database (engine, version, migration tool) *(v0.2.0)* and the Data protection

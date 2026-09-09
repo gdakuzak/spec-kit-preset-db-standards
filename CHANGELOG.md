@@ -3,6 +3,13 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.6.1 — 2026-09-09
+
+### Changed
+
+- `README.md`: install URL now points at `main` instead of a version tag, and a
+  new "Update" section (remove + re-add) for refreshing an existing install.
+
 ## 0.6.0 — 2026-09-09
 
 ### Changed

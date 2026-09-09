@@ -20,8 +20,18 @@ templates and other presets keep working):
 ## Install
 
 ```bash
-specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/tags/v0.6.0.zip
+specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/heads/main.zip
 ```
+
+Update an already-installed copy (re-append the latest from `main`):
+
+```bash
+specify preset remove db-standards
+specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/heads/main.zip
+```
+
+`add` only appends — it won't refresh an existing install, so remove first to
+avoid duplicated sections in the constitution and templates.
 
 Local development:
 
