@@ -159,7 +159,7 @@ feature: class every column it adds and state the handling for anything above
 - Ideally every new column has a class. Anything above `internal` names its
   handling: encryption, hashing, tokenization, masking in logs, or access
   restriction.
-- Secrets (passwords, API keys, tokens) are hashed or encrypted — never plaintext.
+- **Required:** secrets (passwords, API keys, tokens) are hashed or encrypted — never plaintext.
 - Multi-tenant tables carry the tenant key and are covered by the RLS policy, or
   the plan states why app-level scoping is enough here.
 - The migration grants the app role only the privileges it needs on new objects

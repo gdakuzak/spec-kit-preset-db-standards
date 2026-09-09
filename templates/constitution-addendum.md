@@ -33,7 +33,9 @@ existing plans.
 - **Row-level security**: [DATABASE_RLS_POLICY] (recommended: required on every
   multi-tenant table)
 - **Data classification**: recommended — class every column as public, internal,
-  PII, regulated, or secret. Secrets are never stored in plaintext.
+  PII, regulated, or secret.
+- **Secrets are never stored in plaintext** (required): passwords, API keys, and
+  tokens are always hashed or encrypted.
 
 <!--
   Recommended, not required by this preset: if your compliance context calls

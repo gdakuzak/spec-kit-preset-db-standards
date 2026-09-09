@@ -3,6 +3,14 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.6.2 — 2026-09-09
+
+### Changed
+
+- "Secrets never stored in plaintext" is called out as a required item (its own
+  bullet in the constitution, marked **Required** in the plan and checklist) —
+  it was not softened with column classification.
+
 ## 0.6.1 — 2026-09-09
 
 ### Changed

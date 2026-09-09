@@ -83,7 +83,7 @@ OLAP tables:
 
 - [ ] Recommended: every new column has a data class (public / internal / PII / regulated / secret) in the plan.
 - [ ] Anything above `internal` names its handling (encryption, hashing, tokenization, log masking, access restriction).
-- [ ] Secrets and tokens are hashed or encrypted — never plaintext.
+- [ ] **Required:** secrets and tokens are hashed or encrypted — never plaintext.
 - [ ] PII / regulated columns handled per the spec's retention rule.
 - [ ] Multi-tenant tables carry the tenant key and are covered by RLS, or the plan justifies app-level scoping.
 - [ ] Migration grants the app role only the privileges it needs on new objects.
