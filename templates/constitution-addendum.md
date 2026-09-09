@@ -32,7 +32,12 @@ existing plans.
   read-only role or replica, not the app's write role)
 - **Row-level security**: [DATABASE_RLS_POLICY] (recommended: required on every
   multi-tenant table)
-- **Encryption at rest**: [DATABASE_ENCRYPTION_POLICY] (which data classes, and
-  how — disk / tablespace / column)
 - **Data classification is mandatory**: every column is one of public, internal,
   PII, regulated, or secret. Secrets are never stored in plaintext.
+
+<!--
+  Recommended, not required by this preset: if your compliance context calls
+  for it, also record an encryption-at-rest policy here — which data classes
+  are encrypted and how (full-disk / tablespace / column).
+-->
+

@@ -5,16 +5,18 @@ tracks what's done and what's next so we can pick up between sessions.
 
 ## Shipped
 
-See `CHANGELOG.md` for the per-version breakdown. Current: **v0.4.0**.
+See `CHANGELOG.md` for the per-version breakdown. Current: **v0.5.0**.
 
 - **speckit.constitution** (command, append) → requires confirming the target
   database (engine, version, migration tool) *(v0.2.0)* and the Data protection
-  posture (roles, RLS, encryption) *(v0.4.0)* with the user before drafting;
-  don't infer silently.
+  posture (roles, RLS) *(v0.4.0)* with the user before drafting; don't infer
+  silently. Encryption at rest is a usage recommendation, not a confirmed field
+  *(v0.5.0)*.
 - **constitution-template** (append) → *Database* section (engine / version /
   migration tool; engine change = MAJOR amendment) *(v0.2.0)* and *Data
-  protection* section (app role, read split, RLS policy, encryption policy,
-  mandatory column classification) *(v0.4.0)*.
+  protection* section (app role, read split, RLS policy, mandatory column
+  classification) *(v0.4.0)*; encryption at rest is a recommendation comment
+  *(v0.5.0)*.
 - **spec-template** → *Data Requirements*: entities, reads/writes, retention,
   consistency, non-functional expectations.
 - **plan-template** → *Database Design*:

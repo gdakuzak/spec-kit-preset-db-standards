@@ -11,7 +11,7 @@ templates and other presets keep working):
 
 | Target | What is added | Purpose |
 |--------|---------------|---------|
-| `speckit.constitution` (command) | Database + Data protection confirmation step | Forces confirming the target DB (engine, version, migration tool) and the security posture (roles, RLS, encryption) before the constitution is drafted |
+| `speckit.constitution` (command) | Database + Data protection confirmation step | Forces confirming the target DB (engine, version, migration tool) and the security posture (roles, RLS) before the constitution is drafted |
 | `constitution-template` | Database + Data protection sections | Records engine / version / migration tool and the project-wide security posture |
 | `spec-template` | Data Requirements | What data the feature needs — entities, reads/writes, retention, consistency |
 | `plan-template` | Database Design | Naming conventions, OLTP/OLAP classification, normalization (3NF for OLTP) & denormalization trade-offs, schema changes, constraints & integrity (DB-enforced invariants, NOT NULL, FK actions, CHECK), data protection (column classification, secrets, RLS, least-privilege), external identifier exposure, SQL portability (ANSI-first, vendor-feature flagging), query safety (SQL injection — bound params, allowlisted identifiers), indexing plan, N+1 / query-volume plan |
@@ -20,7 +20,7 @@ templates and other presets keep working):
 ## Install
 
 ```bash
-specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/tags/v0.4.0.zip
+specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/tags/v0.5.0.zip
 ```
 
 Local development:

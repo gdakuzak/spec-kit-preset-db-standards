@@ -3,6 +3,16 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.5.0 — 2026-09-09
+
+### Changed
+
+- Encryption at rest is no longer a confirmed field in the constitution. The
+  `speckit.constitution` command no longer requires an answer and the
+  `constitution-template` drops the `[DATABASE_ENCRYPTION_POLICY]` placeholder —
+  it's now a usage recommendation (record which data classes are encrypted and
+  how, full-disk / tablespace / column, if compliance calls for it).
+
 ## 0.4.0 — 2026-09-09
 
 ### Added
