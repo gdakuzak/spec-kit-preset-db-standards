@@ -23,15 +23,11 @@ templates and other presets keep working):
 specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/heads/main.zip
 ```
 
-Update an already-installed copy (re-append the latest from `main`):
+Update an already-installed copy — `add` only appends, so remove first (one line):
 
 ```bash
-specify preset remove db-standards
-specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/heads/main.zip
+specify preset remove db-standards && specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/heads/main.zip
 ```
-
-`add` only appends — it won't refresh an existing install, so remove first to
-avoid duplicated sections in the constitution and templates.
 
 Local development:
 
