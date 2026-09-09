@@ -3,8 +3,16 @@
 Working notes for the `db-standards` preset. Not shipped documentation — this
 tracks what's done and what's next so we can pick up between sessions.
 
-## Shipped (v0.1.0, unreleased)
+## Shipped
 
+See `CHANGELOG.md` for the per-version breakdown. Current: **v0.2.0**.
+
+- **speckit.constitution** (command, append) → requires confirming the target
+  database (engine, version, migration tool) with the user before drafting;
+  don't infer silently. *(v0.2.0)*
+- **constitution-template** (append) → *Database* section (engine / version /
+  migration tool) as a project-wide constraint; engine change = MAJOR amendment.
+  *(v0.2.0)*
 - **spec-template** → *Data Requirements*: entities, reads/writes, retention,
   consistency, non-functional expectations.
 - **plan-template** → *Database Design*:
@@ -25,6 +33,8 @@ tracks what's done and what's next so we can pick up between sessions.
   - Indexing plan (query → columns → index).
   - N+1 and query volume (eager/batch load, query-count budget with a test,
     keyset pagination).
+  - "Target database" pointer at the top → read engine/version from the
+    constitution; stop and resolve it there if unset.
 - **tasks-template** → *Schema Review Checklist*: naming, integrity,
   normalization (OLTP + OLAP), SQL portability, query safety (SQL injection),
   performance, migration safety, data handling.
@@ -68,7 +78,8 @@ not spec-driven design.
 
 ## Publishing (not started)
 
-- `git` commit + `git tag v0.1.0` + GitHub release.
+- Each feature/fix: bump `preset.yml` + CHANGELOG, commit to `main`, `git tag
+  vX.Y.Z`, GitHub release.
 - PR to `github/spec-kit`: add to `presets/catalog.community.json` (sorted by id)
   and a row in `docs/community/presets.md`.
 - Maintainer applies the `preset-submission` label → catalog-validation workflow.

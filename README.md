@@ -6,11 +6,13 @@ SQL schema design, not a particular framework.
 
 ## What it provides
 
-It **appends** sections to three core templates (your existing spec-kit
+It **appends** to core templates and one command (your existing spec-kit
 templates and other presets keep working):
 
-| Template | Section added | Purpose |
-|----------|---------------|---------|
+| Target | What is added | Purpose |
+|--------|---------------|---------|
+| `speckit.constitution` (command) | Database confirmation step | Forces confirming the target DB engine + version + migration tool before the constitution is drafted |
+| `constitution-template` | Database section | Records engine / version / migration tool as a project-wide constraint |
 | `spec-template` | Data Requirements | What data the feature needs — entities, reads/writes, retention, consistency |
 | `plan-template` | Database Design | Naming conventions, OLTP/OLAP classification, normalization (3NF for OLTP) & denormalization trade-offs, schema changes, SQL portability (ANSI-first, vendor-feature flagging), query safety (SQL injection — bound params, allowlisted identifiers), indexing plan, N+1 / query-volume plan |
 | `tasks-template` | Schema Review Checklist | Run before merging any migration |
@@ -18,14 +20,14 @@ templates and other presets keep working):
 ## Install
 
 ```bash
-specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/tags/v0.1.0.zip
+specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/tags/v0.2.0.zip
 ```
 
 Local development:
 
 ```bash
 specify preset add --dev ./spec-kit-preset-db-standards
-specify preset resolve plan-template   # verify the section appears
+specify preset resolve constitution-template   # verify the section appears
 specify preset remove db-standards     # when done
 ```
 

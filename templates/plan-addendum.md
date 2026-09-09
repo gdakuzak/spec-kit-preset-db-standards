@@ -5,6 +5,11 @@
   This is the HOW for the "Data Requirements" section of the spec.
 -->
 
+**Target database**: [read the engine + version from the constitution's Database
+section]. If it is unset or `TODO` there, stop and resolve it via
+`/speckit.constitution` before planning schema work — portability, type, and
+migration decisions below all depend on it.
+
 ### Naming conventions
 
 These are the rules a schema in this project must follow. Call out any
