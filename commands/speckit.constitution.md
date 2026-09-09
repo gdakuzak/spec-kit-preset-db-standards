@@ -15,8 +15,14 @@ Confirm:
 If the user genuinely hasn't decided yet, write `TODO(DATABASE_ENGINE)` and list
 it in the Sync Impact Report as a deferred item.
 
-Record the confirmed answers in the constitution's **Database** section
-(placeholders `[DATABASE_ENGINE]`, `[DATABASE_VERSION]`,
-`[DATABASE_MIGRATION_TOOL]`). Every later db-standards step — SQL portability,
-data types, migration mechanics, query safety, row-level security — is guided by
-this value, so it must be settled in the constitution first.
+Also confirm the **Data protection** posture with the user (placeholders
+`[DATABASE_APP_ROLE]`, `[DATABASE_READ_SPLIT]`, `[DATABASE_RLS_POLICY]`,
+`[DATABASE_ENCRYPTION_POLICY]`): how the app connects, whether reporting reads
+are split off, whether row-level security is required, and which data classes are
+encrypted at rest. Offer the recommended stance shown in the template; record
+what the user decides.
+
+Record the confirmed answers in the constitution's **Database** and **Data
+protection** sections. Every later db-standards step — SQL portability, data
+types, migration mechanics, query safety, row-level security — is guided by these
+values, so they must be settled in the constitution first.

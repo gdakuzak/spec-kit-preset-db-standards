@@ -144,6 +144,39 @@ Rules:
 - **Defaults belong in the database**, not only in the ORM, so a raw insert
   stays valid.
 
+### Data protection
+
+Follows the constitution's **Data protection** posture. For this feature, class
+every column it adds and state the handling for anything above `internal`:
+
+| Column / table | Class (public / internal / PII / regulated / secret) | Handling |
+|----------------|------------------------------------------------------|----------|
+| [`users.email`] | PII | [access via app only; excluded from logs] |
+| [`users.password`] | secret | [argon2 hash — never reversible] |
+| [`payments.pan`] | regulated | [not stored — tokenized via provider] |
+
+- Every new column has a class. Anything above `internal` names its handling:
+  encryption, hashing, tokenization, masking in logs, or access restriction.
+- Secrets (passwords, API keys, tokens) are hashed or encrypted — never plaintext.
+- Multi-tenant tables carry the tenant key and are covered by the RLS policy, or
+  the plan states why app-level scoping is enough here.
+- The migration grants the app role only the privileges it needs on new objects
+  (no blanket `ALL`).
+
+### Identifiers exposed externally
+
+- Internal primary keys may be sequential (`bigint`). **No sequential ID appears
+  on an external surface** — URL, API response, export file, email link.
+- What leaves the system is a UUID v7 / ULID, or a separate opaque public token
+  column. Map it here:
+
+  | Resource | Internal key | External identifier |
+  |----------|--------------|---------------------|
+  | [`invoices`] | `id bigint` | `public_id uuid` |
+
+- Exposing an identifier is never a substitute for authorization — every request
+  is still checked against the caller's access to that specific object.
+
 ### SQL portability
 
 Default to **standard (ANSI) SQL**. It survives a database migration; vendor

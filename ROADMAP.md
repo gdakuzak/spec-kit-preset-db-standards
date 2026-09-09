@@ -5,14 +5,16 @@ tracks what's done and what's next so we can pick up between sessions.
 
 ## Shipped
 
-See `CHANGELOG.md` for the per-version breakdown. Current: **v0.3.0**.
+See `CHANGELOG.md` for the per-version breakdown. Current: **v0.4.0**.
 
 - **speckit.constitution** (command, append) → requires confirming the target
-  database (engine, version, migration tool) with the user before drafting;
-  don't infer silently. *(v0.2.0)*
+  database (engine, version, migration tool) *(v0.2.0)* and the Data protection
+  posture (roles, RLS, encryption) *(v0.4.0)* with the user before drafting;
+  don't infer silently.
 - **constitution-template** (append) → *Database* section (engine / version /
-  migration tool) as a project-wide constraint; engine change = MAJOR amendment.
-  *(v0.2.0)*
+  migration tool; engine change = MAJOR amendment) *(v0.2.0)* and *Data
+  protection* section (app role, read split, RLS policy, encryption policy,
+  mandatory column classification) *(v0.4.0)*.
 - **spec-template** → *Data Requirements*: entities, reads/writes, retention,
   consistency, non-functional expectations.
 - **plan-template** → *Database Design*:
@@ -29,6 +31,10 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v0.3.0**.
     explicit FK `ON DELETE`, `UNIQUE` as a constraint, `CHECK` for expressible
     single-row rules, multi-row/table invariants in a transaction or trigger,
     DB-side defaults. *(v0.3.0)*
+  - Data protection: class every new column, state handling above `internal`,
+    secrets never plaintext, multi-tenant RLS, least-privilege grants. *(v0.4.0)*
+  - Identifiers exposed externally: no sequential ID on an external surface;
+    expose UUID/ULID or an opaque token; per-object authorization. *(v0.4.0)*
   - SQL portability: ANSI-first; flag vendor functions/procs/triggers for
     migration risk; propose the standard alternative.
   - Query safety (SQL injection): bound parameters only; `LIKE` / `IN`
@@ -42,7 +48,8 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v0.3.0**.
     constitution; stop and resolve it there if unset.
 - **tasks-template** → *Schema Review Checklist*: naming, integrity (expanded in
   v0.3.0), normalization (OLTP + OLAP), SQL portability, query safety (SQL
-  injection), performance, migration safety, data handling.
+  injection), performance, migration safety, data handling + external-identifier
+  exposure (v0.4.0).
 
 ## Next up
 
@@ -57,21 +64,22 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v0.3.0**.
 3. **Transactions & concurrency** — short transactions, deliberate isolation
    level, optimistic locking (`version` column) vs `SELECT FOR UPDATE`,
    idempotency keys for retryable operations.
-4. **Security & data protection** — app role is not owner, separate read/write
-   credentials, PII classification + handling, sensitive-column encryption, no
-   plaintext secrets, RLS for multi-tenant.
 
 ### Situational (later, if wanted)
 
-6. Auditing & history (`created_by` / `updated_by`, history / audit-log table).
-7. Safe column/table removal (stop writing → stop reading → drop) — pairs with
+4. Auditing & history (`created_by` / `updated_by`, history / audit-log table).
+5. Safe column/table removal (stop writing → stop reading → drop) — pairs with
    expand-contract.
-8. Query observability (`EXPLAIN` for hot queries in the plan, slow-query log,
+6. Query observability (`EXPLAIN` for hot queries in the plan, slow-query log,
    query comments for tracing).
-9. JSON / semi-structured columns (when acceptable, schema validation, GIN
+7. JSON / semi-structured columns (when acceptable, schema validation, GIN
    index, no deep-path access on hot paths).
-10. ID exposure (surrogate vs natural, don't expose sequential IDs externally —
-    enumeration risk).
+
+### Done
+
+- ~~Security & data protection~~ → v0.4.0 (constitution posture + per-feature
+  column classification).
+- ~~ID exposure~~ → v0.4.0 (no sequential ID on external surfaces).
 
 ### Out of scope
 

@@ -3,6 +3,24 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.4.0 — 2026-09-09
+
+### Added
+
+- `constitution-template` → "Data protection" section: project-wide posture —
+  app connects as a non-owner role, reporting reads split off, row-level security
+  policy, encryption-at-rest policy, mandatory column data classification.
+- `speckit.constitution` (command): also confirms the Data protection posture
+  with the user.
+- `plan-template` → "Data protection" section: class every new column
+  (public / internal / PII / regulated / secret) and state handling; secrets
+  never plaintext; multi-tenant RLS; least-privilege grants.
+- `plan-template` → "Identifiers exposed externally" section: no sequential ID
+  on an external surface — expose UUID/ULID or an opaque token; authorization is
+  still per-object.
+- `tasks-template` → "Data handling" checklist expanded; new "Identifiers
+  exposed externally" checklist.
+
 ## 0.3.0 — 2026-09-09
 
 ### Added

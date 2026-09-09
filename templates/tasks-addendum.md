@@ -81,5 +81,15 @@ OLAP tables:
 
 ### Data handling
 
-- [ ] PII / regulated columns identified and handled per the spec's retention rule.
-- [ ] No secrets or tokens stored in plaintext.
+- [ ] Every new column has a data class (public / internal / PII / regulated / secret) in the plan.
+- [ ] Anything above `internal` names its handling (encryption, hashing, tokenization, log masking, access restriction).
+- [ ] Secrets and tokens are hashed or encrypted — never plaintext.
+- [ ] PII / regulated columns handled per the spec's retention rule.
+- [ ] Multi-tenant tables carry the tenant key and are covered by RLS, or the plan justifies app-level scoping.
+- [ ] Migration grants the app role only the privileges it needs on new objects.
+
+### Identifiers exposed externally
+
+- [ ] No sequential ID appears in a URL, API response, export, or email link.
+- [ ] External identifiers are UUID/ULID or a separate opaque token, mapped in the plan.
+- [ ] Object-level authorization is enforced regardless of how the identifier is shaped.
