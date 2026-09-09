@@ -1,0 +1,4 @@
+# Working notes — kept in the repo for cross-session context, excluded from
+# release archives (git archive / GitHub release tarballs).
+ROADMAP.md export-ignore
+.gitattributes export-ignore
