@@ -109,6 +109,41 @@ one-big-table, etc.); pick one and note it. Whatever the style, hold to:
 - Backfill needed: [none / describe, and whether it runs in the migration or a separate job]
 - Zero-downtime concerns: [adding a NOT NULL column, renaming, changing a type, large index build — how each is handled]
 
+### Constraints & integrity
+
+**The database is where a data invariant is guaranteed.** App-side validation is
+for UX — early, friendly errors — never the thing that keeps the data correct.
+If an invariant can be a constraint, it is a constraint.
+
+List the invariants of each new/changed table and how each is enforced:
+
+| Invariant | Enforcement |
+|-----------|-------------|
+| [an invoice always has a customer] | `customer_id NOT NULL` + FK |
+| [`end_date` is after `start_date`] | `CHECK (end_date > start_date)` |
+| [one active membership per user] | partial `UNIQUE (user_id) WHERE status = 'active'` |
+| [order total equals the sum of its lines] | application, inside a transaction — crosses rows (see below) |
+
+Rules:
+
+- **`NOT NULL` by default.** A column is nullable only when NULL is a real,
+  defined state, and the plan says what NULL means there. No placeholder `''` /
+  `0` / `1970-01-01` standing in for "unknown".
+- **Every FK is a real constraint** with an explicit action: `ON DELETE RESTRICT`
+  (default), `CASCADE` (only for genuinely owned children), or `SET NULL` (only
+  if the column is nullable and that state means something). State the choice per FK.
+- **`UNIQUE` is a constraint**, not just a unique index by convention. Natural
+  keys and "only one of X" rules are `UNIQUE`, partial when the rule is conditional.
+- **`CHECK` for every single-row domain rule that is expressible** — ranges,
+  allowed values, "at least one of these columns is set", non-negative amounts.
+  Don't skip it because the app "already checks".
+- **Multi-row / multi-table invariants** (totals match, ranges don't overlap,
+  count limits) can't be a simple `CHECK`. Enforce them in the app inside a
+  transaction, or in a trigger — and record which and where. This is the one
+  place app-side enforcement *is* the guarantee.
+- **Defaults belong in the database**, not only in the ORM, so a raw insert
+  stays valid.
+
 ### SQL portability
 
 Default to **standard (ANSI) SQL**. It survives a database migration; vendor

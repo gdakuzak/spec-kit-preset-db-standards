@@ -14,10 +14,14 @@
 
 ### Integrity
 
-- [ ] Every foreign key has a real FK constraint with an explicit `ON DELETE` rule.
-- [ ] `NOT NULL` on every column that is logically required.
-- [ ] `UNIQUE` / `CHECK` constraints express the invariants from the spec.
+- [ ] Each new/changed table's invariants are listed in the plan with their enforcement.
+- [ ] `NOT NULL` on every column that is logically required; each nullable column has a defined meaning for NULL.
+- [ ] Every foreign key is a real constraint with an explicit `ON DELETE` action (`RESTRICT` / `CASCADE` / `SET NULL`), chosen deliberately.
+- [ ] `UNIQUE` constraints (partial where conditional) express every "only one of X" rule.
+- [ ] Every single-row domain rule that can be a `CHECK` is a `CHECK`, even if the app also checks it.
+- [ ] Multi-row / multi-table invariants are enforced in a transaction or trigger, and the plan says which and where.
 - [ ] Default values are set in the database, not only in application code.
+- [ ] No placeholder sentinel (`''`, `0`, `1970-01-01`) standing in for "unknown".
 
 ### Normalization
 

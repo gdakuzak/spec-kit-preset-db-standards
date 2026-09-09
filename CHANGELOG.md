@@ -3,6 +3,17 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.3.0 — 2026-09-09
+
+### Added
+
+- `plan-template` → "Constraints & integrity" section: the database is where an
+  invariant is guaranteed (app validation is UX only); per-table invariant →
+  enforcement table; `NOT NULL` by default, explicit FK `ON DELETE` actions,
+  `UNIQUE` as a constraint, `CHECK` for every expressible single-row rule,
+  multi-row/multi-table invariants in a transaction or trigger, DB-side defaults.
+- `tasks-template` → "Integrity" checklist expanded to match.
+
 ## 0.2.0 — 2026-09-09
 
 ### Added
