@@ -146,8 +146,9 @@ Rules:
 
 ### Data protection
 
-Follows the constitution's **Data protection** posture. For this feature, class
-every column it adds and state the handling for anything above `internal`:
+Follows the constitution's **Data protection** posture. Recommended for this
+feature: class every column it adds and state the handling for anything above
+`internal`:
 
 | Column / table | Class (public / internal / PII / regulated / secret) | Handling |
 |----------------|------------------------------------------------------|----------|
@@ -155,8 +156,9 @@ every column it adds and state the handling for anything above `internal`:
 | [`users.password`] | secret | [argon2 hash — never reversible] |
 | [`payments.pan`] | regulated | [not stored — tokenized via provider] |
 
-- Every new column has a class. Anything above `internal` names its handling:
-  encryption, hashing, tokenization, masking in logs, or access restriction.
+- Ideally every new column has a class. Anything above `internal` names its
+  handling: encryption, hashing, tokenization, masking in logs, or access
+  restriction.
 - Secrets (passwords, API keys, tokens) are hashed or encrypted — never plaintext.
 - Multi-tenant tables carry the tenant key and are covered by the RLS policy, or
   the plan states why app-level scoping is enough here.

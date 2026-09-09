@@ -32,7 +32,7 @@ existing plans.
   read-only role or replica, not the app's write role)
 - **Row-level security**: [DATABASE_RLS_POLICY] (recommended: required on every
   multi-tenant table)
-- **Data classification is mandatory**: every column is one of public, internal,
+- **Data classification**: recommended — class every column as public, internal,
   PII, regulated, or secret. Secrets are never stored in plaintext.
 
 <!--

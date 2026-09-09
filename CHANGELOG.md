@@ -3,6 +3,14 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.6.0 — 2026-09-09
+
+### Changed
+
+- Column data classification is now recommended, not mandatory. The
+  `constitution-template`, `plan-template` "Data protection" section, and the
+  schema-review checklist all phrase it as a recommendation.
+
 ## 0.5.0 — 2026-09-09
 
 ### Changed

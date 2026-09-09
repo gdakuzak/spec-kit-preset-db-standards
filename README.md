@@ -20,7 +20,7 @@ templates and other presets keep working):
 ## Install
 
 ```bash
-specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/tags/v0.5.0.zip
+specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/tags/v0.6.0.zip
 ```
 
 Local development:

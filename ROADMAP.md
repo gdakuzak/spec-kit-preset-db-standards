@@ -5,7 +5,7 @@ tracks what's done and what's next so we can pick up between sessions.
 
 ## Shipped
 
-See `CHANGELOG.md` for the per-version breakdown. Current: **v0.5.0**.
+See `CHANGELOG.md` for the per-version breakdown. Current: **v0.6.0**.
 
 - **speckit.constitution** (command, append) → requires confirming the target
   database (engine, version, migration tool) *(v0.2.0)* and the Data protection
@@ -14,9 +14,9 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v0.5.0**.
   *(v0.5.0)*.
 - **constitution-template** (append) → *Database* section (engine / version /
   migration tool; engine change = MAJOR amendment) *(v0.2.0)* and *Data
-  protection* section (app role, read split, RLS policy, mandatory column
-  classification) *(v0.4.0)*; encryption at rest is a recommendation comment
-  *(v0.5.0)*.
+  protection* section (app role, read split, RLS policy, column classification)
+  *(v0.4.0)*; encryption at rest is a recommendation comment *(v0.5.0)*; column
+  classification is a recommendation, not mandatory *(v0.6.0)*.
 - **spec-template** → *Data Requirements*: entities, reads/writes, retention,
   consistency, non-functional expectations.
 - **plan-template** → *Database Design*:
@@ -80,7 +80,7 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v0.5.0**.
 ### Done
 
 - ~~Security & data protection~~ → v0.4.0 (constitution posture + per-feature
-  column classification).
+  column classification; classification softened to a recommendation in v0.6.0).
 - ~~ID exposure~~ → v0.4.0 (no sequential ID on external surfaces).
 
 ### Out of scope

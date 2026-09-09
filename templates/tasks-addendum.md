@@ -81,7 +81,7 @@ OLAP tables:
 
 ### Data handling
 
-- [ ] Every new column has a data class (public / internal / PII / regulated / secret) in the plan.
+- [ ] Recommended: every new column has a data class (public / internal / PII / regulated / secret) in the plan.
 - [ ] Anything above `internal` names its handling (encryption, hashing, tokenization, log masking, access restriction).
 - [ ] Secrets and tokens are hashed or encrypted — never plaintext.
 - [ ] PII / regulated columns handled per the spec's retention rule.
