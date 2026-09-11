@@ -10,6 +10,11 @@ section]. If it is unset or `TODO` there, stop and resolve it via
 `/speckit.constitution` before planning schema work — portability, type, and
 migration decisions below all depend on it.
 
+If the engine matches one of this preset's `references/*.md` files (Oracle,
+MySQL/MariaDB, SQL Server, DynamoDB), read that file now — it sharpens or, for
+DynamoDB, replaces several sections below with the engine's own idiom instead
+of the generic ANSI-first default.
+
 ### Naming conventions
 
 These are the rules a schema in this project must follow. Call out any

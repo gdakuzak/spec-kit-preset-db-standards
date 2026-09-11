@@ -3,6 +3,21 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.7.0 — 2026-09-11
+
+### Added
+
+- `references/oracle.md`, `references/mysql.md`, `references/sqlserver.md`,
+  `references/dynamodb.md` — engine-specific best practices, shipped as files
+  in this preset (not appended to any template, so a project only pulls in
+  guidance for the engine it uses). `plan-template`'s "Target database" line
+  now points at the matching file.
+- `references/dynamodb.md` is written as its own model rather than notes on
+  the SQL-shaped templates: it states plainly which `db-standards` sections
+  don't apply to a non-relational engine and what replaces them (access
+  patterns before design, single-table design, partition/sort key design,
+  GSI/LSI, `ConditionExpression`/`TransactWriteItems`, TTL, Streams).
+
 ## 0.6.2 — 2026-09-09
 
 ### Changed
