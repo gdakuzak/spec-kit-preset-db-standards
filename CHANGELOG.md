@@ -3,6 +3,14 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.7.1 — 2026-09-13
+
+### Changed
+
+- `plan-template` and `README`: state explicitly that an engine with no
+  matching `references/*.md` file (PostgreSQL, SQLite, CockroachDB, …) just
+  follows the generic sections — they're the default, not a fallback.
+
 ## 0.7.0 — 2026-09-11
 
 ### Added

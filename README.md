@@ -29,6 +29,10 @@ guidance for engines it doesn't use:
 | `references/sqlserver.md` | Clustered index vs PK, covering/filtered indexes, `READ_COMMITTED_SNAPSHOT`, system-versioned temporal tables, parameter sniffing |
 | `references/dynamodb.md` | **Not relational** — access-pattern-first design, single-table design, partition/sort key design, GSI/LSI, item limits, `ConditionExpression`/`TransactWriteItems`, TTL, Streams. Says plainly which generic sections don't apply. |
 
+On any other engine (PostgreSQL, SQLite, CockroachDB, …) there's no reference
+file to read — the generic `plan-template` sections are the default, not a
+fallback for the engines that lack dedicated guidance.
+
 ## Install
 
 ```bash

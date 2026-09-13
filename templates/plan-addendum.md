@@ -15,6 +15,11 @@ MySQL/MariaDB, SQL Server, DynamoDB), read that file now — it sharpens or, for
 DynamoDB, replaces several sections below with the engine's own idiom instead
 of the generic ANSI-first default.
 
+If it doesn't match any of them (PostgreSQL, SQLite, CockroachDB, or any other
+engine without a reference file), there is nothing extra to read — follow the
+generic sections below as written. They're the default for every engine, not
+just a fallback for the ones without dedicated guidance.
+
 ### Naming conventions
 
 These are the rules a schema in this project must follow. Call out any
