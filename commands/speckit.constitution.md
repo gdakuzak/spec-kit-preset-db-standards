@@ -7,7 +7,7 @@ ask, even when a value seems obvious, and echo it back for confirmation.
 Confirm:
 
 - **Engine** — e.g. PostgreSQL, MySQL / MariaDB, SQL Server, Oracle, SQLite,
-  CockroachDB, or another.
+  CockroachDB, DynamoDB, MongoDB, or another.
 - **Major version** — e.g. PostgreSQL 16.
 - **Migration tool / mechanism** — e.g. Flyway, Liquibase, Alembic, Ecto
   migrations, Prisma Migrate, Rails, raw SQL.

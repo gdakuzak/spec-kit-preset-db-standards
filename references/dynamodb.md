@@ -1,6 +1,6 @@
 # DynamoDB — engine-specific guidance
 
-DynamoDB is not relational. Most of `db-standards`' plan sections assume a
+DynamoDB is **NoSQL** (key-value/document). Most of `db-standards`' plan sections assume a
 SQL/relational engine and **do not apply** here — this file replaces them
 rather than sharpening them. Use the table below to know what to skip and what
 to read instead; the rest of this file is the DynamoDB-native design guide.

@@ -5,7 +5,7 @@ tracks what's done and what's next so we can pick up between sessions.
 
 ## Shipped
 
-See `CHANGELOG.md` for the per-version breakdown. Current: **v0.7.1**.
+See `CHANGELOG.md` for the per-version breakdown. Current: **v0.8.0**.
 
 - **speckit.constitution** (command, append) → requires confirming the target
   database (engine, version, migration tool) *(v0.2.0)* and the Data protection
@@ -56,6 +56,11 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v0.7.1**.
   practices, not appended to any template; `plan-template`'s "Target database"
   line points at the matching one. *(v0.7.0)* — see "Engine-specific reference
   files" below for what each covers.
+- **references/mongodb.md** → NoSQL (document model) reference: embed vs.
+  reference, `$jsonSchema` validation, index design, operator injection,
+  multi-document transactions, TTL indexes, change streams, sharding.
+  *(v0.8.0)*
+- **README** → "Contributing" section pointing at GitHub issues. *(v0.8.0)*
 
 ## Next up
 
@@ -113,11 +118,12 @@ for the agent to read, it's just never composed into a core template.
 | MySQL / MariaDB | `references/mysql.md` | Yes |
 | SQL Server | `references/sqlserver.md` | Yes |
 | DynamoDB | `references/dynamodb.md` | **No** — NoSQL, access-pattern-first modeling. Inverts several `db-standards` defaults (denormalization is the *starting point*, not debt; no FK/JOIN/SQL-injection sections apply). Written as its own model, not "Dynamo notes bolted onto the SQL template." |
+| MongoDB | `references/mongodb.md` | **No** — NoSQL, document model. Per-relationship embed/reference decision replaces normalization; `$jsonSchema` validation replaces DDL/`CHECK`; operator injection replaces SQL injection. Written as its own model, same as DynamoDB. |
 
-**Status: shipped** *(v0.7.0)* — full content is in the four `references/*.md`
-files themselves; don't duplicate it here. Future engine-guidance work (a new
-engine, or expanding an existing file) is tracked as a normal backlog item
-below, not in this section.
+**Status: shipped** *(v0.7.0, MongoDB added v0.8.0)* — full content is in the
+`references/*.md` files themselves; don't duplicate it here. Future
+engine-guidance work (a new engine, or expanding an existing file) is tracked
+as a normal backlog item below, not in this section.
 
 ## Publishing (not started)
 

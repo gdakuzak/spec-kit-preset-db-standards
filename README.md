@@ -27,7 +27,8 @@ guidance for engines it doesn't use:
 | `references/oracle.md` | Bind variables & the shared pool, `NUMBER`/`VARCHAR2` semantics, `IDENTITY` vs `SEQUENCE`, bitmap indexes, when a PL/SQL package earns its place, materialized views |
 | `references/mysql.md` | InnoDB vs MyISAM, `utf8mb4`, PK choice vs InnoDB clustering, the pre-8.0.16 `CHECK` gap, online DDL, gap locks, replication format |
 | `references/sqlserver.md` | Clustered index vs PK, covering/filtered indexes, `READ_COMMITTED_SNAPSHOT`, system-versioned temporal tables, parameter sniffing |
-| `references/dynamodb.md` | **Not relational** — access-pattern-first design, single-table design, partition/sort key design, GSI/LSI, item limits, `ConditionExpression`/`TransactWriteItems`, TTL, Streams. Says plainly which generic sections don't apply. |
+| `references/dynamodb.md` | **NoSQL** — access-pattern-first design, single-table design, partition/sort key design, GSI/LSI, item limits, `ConditionExpression`/`TransactWriteItems`, TTL, Streams. Says plainly which generic sections don't apply. |
+| `references/mongodb.md` | **NoSQL** — embed vs. reference, document validation (`$jsonSchema`), index design (compound/multikey/text), operator injection, multi-document transactions, TTL indexes, change streams, sharding. Says plainly which generic sections don't apply. |
 
 On any other engine (PostgreSQL, SQLite, CockroachDB, …) there's no reference
 file to read — the generic `plan-template` sections are the default, not a
@@ -61,10 +62,15 @@ specify preset remove db-standards     # when done
 ## When not to use it
 
 - No database at all.
-- A schemaless store with no reference file yet (see `references/`) — the
-  generic templates assume a relational engine; DynamoDB is the one covered
-  exception.
+- A NoSQL store with no reference file yet (see `references/`) — the generic
+  templates assume a relational engine; DynamoDB and MongoDB are the covered
+  exceptions.
 - You already have a house preset covering the same templates with `replace` — stacking `append` on top still works, but check the combined output.
+
+## Contributing
+
+Found a gap, a wrong default, or want another engine covered? [Open an
+issue](https://github.com/gdakuzak/spec-kit-preset-db-standards/issues).
 
 ## License
 

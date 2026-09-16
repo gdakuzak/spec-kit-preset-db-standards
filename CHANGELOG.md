@@ -3,6 +3,24 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.8.0 — 2026-09-15
+
+### Added
+
+- `references/mongodb.md` — NoSQL (document model) engine-specific guidance:
+  embed vs. reference, `$jsonSchema` document validation, `_id`/`ObjectId`
+  identifier caveats, index design (compound/multikey/text/wildcard),
+  operator injection, multi-document transactions, read/write concern, TTL
+  indexes, change streams, aggregation pipeline as the OLAP tool, document
+  size limit, sharding. `plan-template`'s "Target database" line and
+  `speckit.constitution`'s engine list now include it.
+- README: "Contributing" section pointing at GitHub issues.
+
+### Changed
+
+- Terminology: "not relational" / "schemaless" → **NoSQL**, consistently
+  across README and ROADMAP.
+
 ## 0.7.1 — 2026-09-13
 
 ### Changed
