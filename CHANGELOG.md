@@ -3,6 +3,15 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.8.1 — 2026-09-16
+
+### Added
+
+- README: pinned-version install command (`--from .../archive/refs/tags/vX.Y.Z.zip`),
+  needed so the linked README's install snippet can match the exact
+  `download_url` required by the spec-kit community catalog submission. The
+  `main`-tracking install command stays as the primary one.
+
 ## 0.8.0 — 2026-09-15
 
 ### Added
