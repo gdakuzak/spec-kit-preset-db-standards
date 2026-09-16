@@ -49,7 +49,7 @@ specify preset remove db-standards && specify preset add --from https://github.c
 Install a specific released version instead of `main`:
 
 ```bash
-specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/tags/v0.8.1.zip
+specify preset add --from https://github.com/gdakuzak/spec-kit-preset-db-standards/archive/refs/tags/v0.8.2.zip
 ```
 
 Local development:

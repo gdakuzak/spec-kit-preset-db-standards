@@ -3,6 +3,14 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 0.8.2 — 2026-09-16
+
+### Changed
+
+- `preset.yml` `description` shortened to under 200 characters, per the
+  spec-kit catalog's manifest validation rule (the full-detail version lives
+  in the README instead).
+
 ## 0.8.1 — 2026-09-16
 
 ### Added
