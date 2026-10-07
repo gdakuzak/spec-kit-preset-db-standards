@@ -5,7 +5,7 @@ tracks what's done and what's next so we can pick up between sessions.
 
 ## Shipped
 
-See `CHANGELOG.md` for the per-version breakdown. Current: **v0.8.2**.
+See `CHANGELOG.md` for the per-version breakdown. Current: **v1.0.0**.
 
 - **speckit.constitution** (command, append) → requires confirming the target
   database (engine, version, migration tool) *(v0.2.0)* and the Data protection
@@ -52,7 +52,7 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v0.8.2**.
   v0.3.0), normalization (OLTP + OLAP), SQL portability, query safety (SQL
   injection), performance, migration safety, data handling + external-identifier
   exposure (v0.4.0).
-- **references/{oracle,mysql,sqlserver,dynamodb}.md** → engine-specific best
+- **references/{oracle,mysql,postgres,sqlserver,dynamodb}.md** → engine-specific best
   practices, not appended to any template; `plan-template`'s "Target database"
   line points at the matching one. *(v0.7.0)* — see "Engine-specific reference
   files" below for what each covers.
@@ -116,6 +116,7 @@ for the agent to read, it's just never composed into a core template.
 |--------|------|-----------------------------------------------|
 | Oracle | `references/oracle.md` | Yes — extends the same 3NF/OLTP/OLAP model |
 | MySQL / MariaDB | `references/mysql.md` | Yes |
+| PostgreSQL | `references/postgres.md` | Yes |
 | SQL Server | `references/sqlserver.md` | Yes |
 | DynamoDB | `references/dynamodb.md` | **No** — NoSQL, access-pattern-first modeling. Inverts several `db-standards` defaults (denormalization is the *starting point*, not debt; no FK/JOIN/SQL-injection sections apply). Written as its own model, not "Dynamo notes bolted onto the SQL template." |
 | MongoDB | `references/mongodb.md` | **No** — NoSQL, document model. Per-relationship embed/reference decision replaces normalization; `$jsonSchema` validation replaces DDL/`CHECK`; operator injection replaces SQL injection. Written as its own model, same as DynamoDB. |
