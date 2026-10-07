@@ -3,6 +3,20 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 1.0.0 — 2026-10-07
+
+First stable release. Engine-specific references now cover Oracle, MySQL /
+MariaDB, PostgreSQL, SQL Server, DynamoDB and MongoDB.
+
+### Added
+
+- `references/postgres.md` — PostgreSQL engine-specific guidance: types
+  (`text`, `timestamptz`, `numeric`, identity), exclusion constraints,
+  un-indexed FKs, index types (GIN/GiST/BRIN/partial/`INCLUDE`), lock-queue-safe
+  online DDL, MVCC/vacuum, `jsonb`, RLS, connection pooling.
+- `plan-template`, README, ROADMAP: PostgreSQL now listed as having a
+  reference file.
+
 ## 0.8.2 — 2026-09-16
 
 ### Changed

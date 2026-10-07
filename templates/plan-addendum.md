@@ -11,12 +11,12 @@ section]. If it is unset or `TODO` there, stop and resolve it via
 migration decisions below all depend on it.
 
 If the engine matches one of this preset's `references/*.md` files (Oracle,
-MySQL/MariaDB, SQL Server, DynamoDB, MongoDB), read that file now — it
+MySQL/MariaDB, PostgreSQL, SQL Server, DynamoDB, MongoDB), read that file now — it
 sharpens or, for the NoSQL engines (DynamoDB, MongoDB), replaces several
 sections below with the engine's own idiom instead of the generic ANSI-first
 default.
 
-If it doesn't match any of them (PostgreSQL, SQLite, CockroachDB, or any other
+If it doesn't match any of them (SQLite, CockroachDB, or any other
 engine without a reference file), there is nothing extra to read — follow the
 generic sections below as written. They're the default for every engine, not
 just a fallback for the ones without dedicated guidance.
