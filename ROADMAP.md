@@ -5,7 +5,7 @@ tracks what's done and what's next so we can pick up between sessions.
 
 ## Shipped
 
-See `CHANGELOG.md` for the per-version breakdown. Current: **v1.1.0**.
+See `CHANGELOG.md` for the per-version breakdown. Current: **v1.1.1**.
 
 - **speckit.constitution** (command, append) → requires confirming the target
   database (engine, version, migration tool) *(v0.2.0)* and the Data protection
@@ -78,7 +78,7 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v1.1.0**.
    integer division, check-then-insert races → `UNIQUE` + upsert, set-based
    over row-by-row. Includes soft delete × `UNIQUE` (partial on
    `deleted_at IS NULL`) and case-insensitive uniqueness (email).
-3. **Fixes** *(planned v1.1.1)* — `plan-addendum` points at a non-existent
+3. ~~**Fixes**~~ *(shipped v1.1.1)* — `plan-addendum` points at a non-existent
    "Security section" (should be Data protection); README's `plan-template` row
    misses Performance diagnosis and the v1.1.0 sections.
 4. **Migration discipline** — expand-contract, one logical change per

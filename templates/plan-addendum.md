@@ -293,7 +293,7 @@ Rules:
   driver's parameter binding.
 - The DB role the app connects as has only the privileges it needs (no `DROP`,
   no `CREATE`, not the table owner) — this caps the blast radius if a hole slips
-  through. Full treatment in the Security section.
+  through. Full treatment in the Data protection section.
 
 > ⚠️ **If any query builds SQL from user input without an allowlist**, record it
 > here with the reason and the mitigation, and get it reviewed. This is a hole

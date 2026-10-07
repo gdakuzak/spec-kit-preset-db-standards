@@ -3,6 +3,15 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 1.1.1 — 2026-10-07
+
+### Fixed
+
+- `plan-template` Query safety pointed at a non-existent "Security section";
+  it now points at Data protection.
+- README: the `plan-template` and `tasks-template` rows list the sections
+  added in v1.0.1 and v1.1.0.
+
 ## 1.1.0 — 2026-10-07
 
 ### Added
