@@ -3,7 +3,7 @@ schema_version: "1.0"
 preset:
   id: "db-standards"
   name: "Database Standards"
-  version: "1.0.0"
+  version: "1.0.1"
   description: "Database conventions for spec-driven work: naming, data-model design, constraints, data protection, performance, query safety, a schema-review checklist, and engine-specific references. ORM-agnostic."
   author: "Guilherme Dakuzaku"
   repository: "https://github.com/gdakuzak/spec-kit-preset-db-standards"

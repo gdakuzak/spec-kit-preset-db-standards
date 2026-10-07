@@ -3,9 +3,9 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
-## 1.0.0 — 2026-10-07
+## 1.0.1 — 2026-10-07
 
-### Added (performance concepts)
+### Added
 
 - `plan-template`: selectivity and index-friendly predicates (no function /
   implicit conversion on the indexed column) in the Indexing plan; `SELECT *`
@@ -14,6 +14,8 @@ GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 - `tasks-template`: matching Performance checklist items.
 - `references/{postgres,mysql,sqlserver,oracle}.md`: "Diagnosing performance"
   with each engine's tooling for plans, waits, and statistics.
+
+## 1.0.0 — 2026-10-07
 
 First stable release. Engine-specific references now cover Oracle, MySQL /
 MariaDB, PostgreSQL, SQL Server, DynamoDB and MongoDB.
