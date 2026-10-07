@@ -13,7 +13,9 @@ MariaDB, PostgreSQL, SQL Server, DynamoDB and MongoDB.
 - `references/postgres.md` — PostgreSQL engine-specific guidance: types
   (`text`, `timestamptz`, `numeric`, identity), exclusion constraints,
   un-indexed FKs, index types (GIN/GiST/BRIN/partial/`INCLUDE`), lock-queue-safe
-  online DDL, MVCC/vacuum, `jsonb`, RLS, connection pooling.
+  online DDL, MVCC/vacuum, `jsonb`, RLS, connection pooling, a version-gate
+  table (min. version per feature), schemas & declarative partitioning,
+  owner/app/read-only role separation, batched writes, autovacuum tuning.
 - `plan-template`, README, ROADMAP: PostgreSQL now listed as having a
   reference file.
 
