@@ -5,7 +5,7 @@ tracks what's done and what's next so we can pick up between sessions.
 
 ## Shipped
 
-See `CHANGELOG.md` for the per-version breakdown. Current: **v1.0.1**.
+See `CHANGELOG.md` for the per-version breakdown. Current: **v1.1.0**.
 
 - **speckit.constitution** (command, append) → requires confirming the target
   database (engine, version, migration tool) *(v0.2.0)* and the Data protection
@@ -66,12 +66,12 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v1.0.1**.
 
 ### Backlog (priority order)
 
-1. **Transactions & concurrency** *(planned v1.1.0)* — deliberate isolation
+1. ~~**Transactions & concurrency**~~ *(shipped v1.1.0)* — deliberate isolation
    level, optimistic locking (`version` column) vs `SELECT ... FOR UPDATE`,
    consistent lock order against deadlocks, retry on serialization/deadlock
    errors, no external (HTTP/queue) call inside a transaction, idempotency keys,
    statement/lock timeouts.
-2. **SQL correctness** *(planned v1.1.0)* — queries that return wrong results
+2. ~~**SQL correctness**~~ *(shipped v1.1.0)* — queries that return wrong results
    without erroring: NULL semantics (`NOT IN` + NULL, `= NULL`, `COUNT(col)`),
    fan-out double counting (join 1:N then `SUM`), deterministic `ORDER BY`
    with a unique tie-breaker, half-open time ranges instead of `BETWEEN`,

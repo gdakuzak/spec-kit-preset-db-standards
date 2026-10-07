@@ -3,6 +3,25 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 1.1.0 — 2026-10-07
+
+### Added
+
+- `plan-template`: **Transactions & concurrency** section — per-operation
+  table (transaction scope, concurrency control, conflict handling);
+  constraint vs optimistic vs pessimistic locking; isolation + retry on
+  serialization failure; consistent lock order against deadlocks; no external
+  calls inside a transaction (outbox); idempotency keys; statement/lock
+  timeouts.
+- `plan-template`: **SQL correctness** section — NULL semantics (`= NULL`,
+  `NOT IN` + NULL, aggregates), join fan-out double counting, deterministic
+  `ORDER BY` with a tie-breaker, half-open time ranges, integer division,
+  check-then-act races → upsert, set-based over row-by-row, `UNION` vs
+  `UNION ALL`.
+- `plan-template` Constraints & integrity: soft delete × `UNIQUE` (partial on
+  `deleted_at IS NULL`) and DB-enforced case-insensitive uniqueness.
+- `tasks-template`: matching checklist items and two new checklist sections.
+
 ## 1.0.1 — 2026-10-07
 
 ### Added
