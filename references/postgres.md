@@ -4,6 +4,27 @@ Read this alongside the `db-standards` plan sections it sharpens. It doesn't
 repeat anything already covered generically — only where PostgreSQL's own
 behavior is the right answer, or where it quietly breaks a generic assumption.
 
+## Version
+
+- Run a **supported major** (the project supports each for 5 years; check
+  postgresql.org/support/versioning) and apply **minor releases** promptly —
+  security fixes ship only in minors. Record the exact version in the
+  constitution's Database section; the feature gates below depend on it.
+- Gate features on the version before the plan relies on them:
+
+  | Feature | Min. version |
+  |---------|--------------|
+  | `GENERATED ... AS IDENTITY`, declarative partitioning, logical replication | 10 |
+  | `INCLUDE` indexes, constant-`DEFAULT` `ADD COLUMN` without rewrite, hash partitioning | 11 |
+  | `REINDEX CONCURRENTLY`, stored generated columns, `SET NOT NULL` skipping the scan via a validated `CHECK`, CTEs inlined by default | 12 |
+  | `gen_random_uuid()` in core (no `pgcrypto`) | 13 |
+  | `scram-sha-256` as default `password_encryption` | 14 |
+  | `UNIQUE NULLS NOT DISTINCT`, `MERGE`, `public` schema no longer writable by everyone | 15 |
+  | native `uuidv7()`, virtual generated columns | 18 |
+
+  A feature above the project's version → use the older idiom and say so in
+  the plan.
+
 ## Types
 
 - **`text`** over `varchar(n)` unless the length limit is a real business rule —
@@ -31,6 +52,20 @@ behavior is the right answer, or where it quietly breaks a generic assumption.
   full-page writes). The naming section's UUID v7 / ULID recommendation still
   applies for write-heavy tables; use `identity` bigint when ids aren't exposed.
 - `CLUSTER` is a one-time physical reorder, not maintained — don't plan around it.
+
+## Schemas & partitioning
+
+- **Dedicated schemas** per application or tenant; don't create objects in
+  `public`. **Schema-qualify** objects in migrations (`billing.invoices`) so
+  the result doesn't depend on `search_path`.
+- Separate the **schema owner** (runs migrations) from the **application
+  role** (DML only), and manage grants through **group roles**; add a
+  read-only role for analysts.
+- **Declarative partitioning** (`PARTITION BY RANGE/LIST/HASH`) for very large
+  tables, typically by date: it gives partition pruning and cheap archival
+  (`DETACH`/`DROP` a partition instead of `DELETE`). Queries must filter on
+  the partition key to benefit; the PK/unique constraints must include it;
+  state the key and retention in the plan.
 
 ## Constraints
 
@@ -62,6 +97,16 @@ behavior is the right answer, or where it quietly breaks a generic assumption.
 - Index-only scans depend on the **visibility map**, kept current by autovacuum;
   a table that's never vacuumed won't get them.
 
+## Queries
+
+- Use `EXISTS` for existence checks, not `COUNT(*) > 0`.
+- Run `EXPLAIN ANALYZE` on CTEs, window functions, and `LATERAL` joins before
+  shipping. Since PG 12 a CTE is inlined unless written `AS MATERIALIZED` (or
+  referenced more than once), so older advice about CTEs as "optimization
+  fences" no longer holds.
+- Keep complex SQL in the repo under migrations/versioned files, not in
+  strings hidden in the ORM.
+
 ## Online DDL & migrations
 
 - Most DDL takes an `ACCESS EXCLUSIVE` lock; the danger is the **lock queue**:
@@ -86,6 +131,9 @@ behavior is the right answer, or where it quietly breaks a generic assumption.
   changing and blocks fewer FK-checking inserts.
 - Use **advisory locks** (`pg_advisory_xact_lock`) for application-level
   mutual exclusion instead of inventing a lock table.
+- **Batch large updates/deletes** (e.g. 1–10k rows per transaction, keyed by
+  PK range) — one giant transaction holds locks, bloats the table, and delays
+  vacuum.
 - Keep transactions short: an idle-in-transaction session holds back vacuum
   and bloats tables. Set `idle_in_transaction_session_timeout`.
 
@@ -93,6 +141,13 @@ behavior is the right answer, or where it quietly breaks a generic assumption.
 
 - Updates and deletes leave dead tuples; **autovacuum** reclaims them. Hot,
   high-churn tables may need per-table `autovacuum_*` tuning — note it in the plan.
+- Tune autovacuum **per table** for large or high-churn tables — the defaults
+  (`autovacuum_vacuum_scale_factor` 0.2 = 20% of rows dead) are too lax at
+  scale: lower `autovacuum_vacuum_scale_factor` / `autovacuum_vacuum_threshold`
+  on that table via `ALTER TABLE ... SET (...)`.
+- Run **`ANALYZE`** after a bulk load or mass change so the planner has fresh
+  statistics.
+- Measure index/table bloat with `pgstattuple` before reaching for `pg_repack`.
 - Frequent updates of an indexed column defeat **HOT updates**; leave free
   space (`fillfactor` < 100) on update-heavy tables.
 - `VACUUM FULL` rewrites the table under an exclusive lock — use `pg_repack`
