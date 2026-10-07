@@ -126,6 +126,26 @@ for the agent to read, it's just never composed into a core template.
 engine-guidance work (a new engine, or expanding an existing file) is tracked
 as a normal backlog item below, not in this section.
 
+### Planned engine references (not started)
+
+Each would be its own `references/<engine>.md`. Only SQLite fits the existing
+relational model; the rest are written as their own model, like DynamoDB and
+MongoDB, and say plainly which generic sections don't apply.
+
+| Engine | File | Fits the relational `db-standards` model? | Likely covers |
+|--------|------|------|----------------|
+| SQLite | `references/sqlite.md` | Yes | type affinity vs. `STRICT` tables, FKs off unless `PRAGMA foreign_keys=ON`, WAL mode, limited `ALTER TABLE`, single-writer concurrency |
+| ClickHouse | `references/clickhouse.md` | **No** — columnar OLAP | `MergeTree` `ORDER BY`/partition key, no enforced constraints or row-level transactions, batch inserts, mutations are costly, materialized views |
+| BigQuery | `references/bigquery.md` | **No** — columnar warehouse | partition + clustering, cost = bytes scanned (no `SELECT *`), no enforced PK/FK, nested/repeated fields, slot/quota limits |
+| Firestore | `references/firestore.md` | **No** — document NoSQL | collection/subcollection design, per-document limits, automatic vs. composite indexes, security rules, hot-spotting on sequential ids |
+| Redis | `references/redis.md` | **No** — key-value / data structures | key naming, TTL & eviction policy, persistence (RDB/AOF), not a system of record, atomicity (`MULTI`, Lua), big-key/`KEYS` pitfalls |
+| OpenSearch | `references/opensearch.md` | **No** — search engine | explicit mappings, analyzers, shard/replica sizing, not a source of truth, reindex for mapping changes, query-DSL injection |
+| Neo4j | `references/neo4j.md` | **No** — graph | node/relationship modeling, constraints & indexes, Cypher injection (bound params), supernodes, traversal depth limits |
+| Qdrant | `references/qdrant.md` | **No** — vector database | collection config (vector size, distance metric), HNSW/quantization trade-offs, payload indexes, filtering, embedding-model versioning |
+
+The table row's "Likely covers" is a starting scope, not a spec — confirm when
+each one is picked up.
+
 ## Publishing (not started)
 
 - Each feature/fix: bump `preset.yml` + CHANGELOG, commit to `main`, `git tag
