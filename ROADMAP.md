@@ -64,27 +64,49 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v1.0.1**.
 
 ## Next up
 
-### Backlog (from the menu, roughly priority order)
+### Backlog (priority order)
 
-1. **Migration discipline** — expand-contract, one logical change per migration,
-   no DDL + large backfill in one transaction, `lock_timeout` / `statement_timeout`
-   on DDL, tested rollback, forward-only in prod.
-2. **Data types & precision** — `timestamptz` in UTC, `text` over arbitrary
+1. **Transactions & concurrency** *(planned v1.1.0)* — deliberate isolation
+   level, optimistic locking (`version` column) vs `SELECT ... FOR UPDATE`,
+   consistent lock order against deadlocks, retry on serialization/deadlock
+   errors, no external (HTTP/queue) call inside a transaction, idempotency keys,
+   statement/lock timeouts.
+2. **SQL correctness** *(planned v1.1.0)* — queries that return wrong results
+   without erroring: NULL semantics (`NOT IN` + NULL, `= NULL`, `COUNT(col)`),
+   fan-out double counting (join 1:N then `SUM`), deterministic `ORDER BY`
+   with a unique tie-breaker, half-open time ranges instead of `BETWEEN`,
+   integer division, check-then-insert races → `UNIQUE` + upsert, set-based
+   over row-by-row. Includes soft delete × `UNIQUE` (partial on
+   `deleted_at IS NULL`) and case-insensitive uniqueness (email).
+3. **Fixes** *(planned v1.1.1)* — `plan-addendum` points at a non-existent
+   "Security section" (should be Data protection); README's `plan-template` row
+   misses Performance diagnosis and the v1.1.0 sections.
+4. **Migration discipline** — expand-contract, one logical change per
+   migration, schema compatible with the code version still running, schema
+   deploy separate from code deploy, no DDL + large backfill in one
+   transaction, `lock_timeout` / `statement_timeout` on DDL, tested rollback,
+   forward-only in prod. Absorbs safe column/table removal (stop writing →
+   stop reading → drop).
+5. **Data types & precision** — `timestamptz` in UTC, `text` over arbitrary
    `varchar(n)`, declared `numeric` precision, no nullable boolean, encoding /
-   collation.
-3. **Transactions & concurrency** — short transactions, deliberate isolation
-   level, optimistic locking (`version` column) vs `SELECT FOR UPDATE`,
-   idempotency keys for retryable operations.
+   collation — generic, not only in `postgres.md`.
+6. **Read replicas & lag** — which reads tolerate replication lag, and how
+   read-your-writes is guaranteed when the constitution splits reads off.
+7. **Testing against the real engine** — tests run on the production engine
+   (not SQLite standing in for Postgres), migrations rehearsed on
+   production-sized data, constraints covered by tests.
+8. **Retention mechanism** — the spec asks for a retention rule; the plan
+   should name the purge/archival mechanism (batched delete, partition drop).
+9. **Diagnosing performance for NoSQL** — `dynamodb.md` / `mongodb.md` lack
+   the section the SQL engine files got in v1.0.1.
 
 ### Situational (later, if wanted)
 
-4. Auditing & history (`created_by` / `updated_by`, history / audit-log table).
-5. Safe column/table removal (stop writing → stop reading → drop) — pairs with
-   expand-contract.
-6. Query observability (`EXPLAIN` for hot queries in the plan, slow-query log,
-   query comments for tracing).
-7. JSON / semi-structured columns (when acceptable, schema validation, GIN
-   index, no deep-path access on hot paths).
+10. Auditing & history (`created_by` / `updated_by`, history / audit-log table).
+11. Query observability — beyond v1.0.1's Performance diagnosis: slow-query
+    log thresholds, query comments/tags for tracing back to the call site.
+12. JSON / semi-structured columns (when acceptable, schema validation, GIN
+    index, no deep-path access on hot paths).
 
 ### Done
 
