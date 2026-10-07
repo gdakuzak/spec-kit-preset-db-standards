@@ -86,3 +86,13 @@ spell out:
   source table for fast refresh.
 - State the refresh mode and cadence in the OLAP table's grain comment — it's
   the same information the generic section already asks for.
+
+## Diagnosing performance
+
+- Costliest queries and waits: AWR / ASH (`V$ACTIVE_SESSION_HISTORY`),
+  `V$SQL`; wait events name the bottleneck (I/O, locks, latches).
+- `EXPLAIN PLAN` / `DBMS_XPLAN.DISPLAY_CURSOR` with row-source statistics:
+  compare estimated (`E-Rows`) vs. actual (`A-Rows`). Refresh statistics with
+  `DBMS_STATS`.
+- Bind peeking can fix a plan to the first bind value seen — the Oracle form
+  of parameter sniffing; adaptive cursor sharing mitigates it.

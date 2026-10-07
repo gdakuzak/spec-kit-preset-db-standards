@@ -51,6 +51,10 @@ OLAP tables:
 - [ ] List endpoints have a query-count budget with a test asserting it.
 - [ ] No query in a loop; related data is eager/batch loaded.
 - [ ] Large-list pagination is keyset, not `OFFSET`.
+- [ ] No function, arithmetic, or implicit type conversion on an indexed column in `WHERE`/`JOIN`.
+- [ ] Low-selectivity columns aren't indexed alone; each new index is justified.
+- [ ] No `SELECT *` on a serialized path.
+- [ ] A slow query was diagnosed from its plan and a baseline, not guessed at.
 
 ### SQL portability
 

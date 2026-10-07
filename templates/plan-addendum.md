@@ -270,6 +270,15 @@ For every query this feature adds to a hot path, name the index that serves it.
 - Composite index column order = equality columns first, then range/sort.
 - No redundant index (one already covered by the leftmost prefix of another).
 - Partial index where the query always filters a small subset (`WHERE deleted_at IS NULL`).
+- **Selectivity**: don't index a low-selectivity column alone (boolean, a
+  3-value status). A full scan is the right plan on a small table or when the
+  query reads a large share of the rows — a scan is not a bug by itself.
+- **Index-friendly predicates**: no function or arithmetic on the indexed
+  column (`WHERE lower(email) = ...`, `WHERE date(created_at) = ...`), no
+  implicit type conversion (comparing a text column to a number), no leading
+  wildcard (`LIKE '%x'`). Rewrite the predicate, or index the expression
+  where the engine supports it.
+- Every extra index costs writes, space, and maintenance — justify each one.
 
 ### N+1 and query volume
 
@@ -278,3 +287,23 @@ For every query this feature adds to a hot path, name the index that serves it.
 - Endpoints returning a list declare a **max query count** budget and are covered by a test that asserts it (query counter / `assert_queries` / echo log).
 - No query inside a loop. No ORM lazy-load left implicit on a serialized path.
 - Pagination is keyset (seek) for large or unbounded lists; `OFFSET` only for small bounded sets.
+- Return only the columns the caller needs — no `SELECT *` on a serialized path.
+
+### Performance diagnosis
+
+When a query is slow, measure before changing anything — and scale hardware last:
+
+1. **Baseline** — record the current timing and row counts.
+2. **Find it** — the costliest queries (`pg_stat_statements`, Query Store,
+   `performance_schema`, AWR) and active sessions.
+3. **What is it waiting on?** — I/O, CPU, locks, or memory (wait events).
+4. **Read the plan** (`EXPLAIN` / `EXPLAIN ANALYZE`) — large scans, sorts or
+   spills to disk, a big gap between estimated and actual rows, join type.
+5. **Check indexes and statistics** — stale statistics produce bad plans.
+6. **Rewrite the query or adjust the index, then re-measure** against the baseline.
+7. Only then consider caching, partitioning, or more hardware. Partitioning
+   helps pruning and archival; it hurts queries that don't filter on the partition key.
+
+Locks and transactions: keep transactions short, and tell *blocking* (waiting
+on a lock) from *deadlock* (cycle, the engine aborts one). The engine file's
+isolation/locking section covers the specifics.

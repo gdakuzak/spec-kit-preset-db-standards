@@ -5,6 +5,16 @@ GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
 ## 1.0.0 — 2026-10-07
 
+### Added (performance concepts)
+
+- `plan-template`: selectivity and index-friendly predicates (no function /
+  implicit conversion on the indexed column) in the Indexing plan; `SELECT *`
+  rule; new **Performance diagnosis** section (baseline → costliest queries →
+  waits → plan → indexes/statistics → measure again → hardware last).
+- `tasks-template`: matching Performance checklist items.
+- `references/{postgres,mysql,sqlserver,oracle}.md`: "Diagnosing performance"
+  with each engine's tooling for plans, waits, and statistics.
+
 First stable release. Engine-specific references now cover Oracle, MySQL /
 MariaDB, PostgreSQL, SQL Server, DynamoDB and MongoDB.
 
