@@ -81,3 +81,14 @@ behavior is the right answer, or where it quietly breaks a generic assumption.
 - Index a specific JSON path with a **generated column + index** on it
   (`col GENERATED ALWAYS AS (JSON_EXTRACT(...))`, then index the generated
   column) rather than scanning the JSON document per query.
+
+## Diagnosing performance
+
+- Costliest queries: slow query log and `performance_schema` / `sys` schema.
+  Active sessions: `SHOW PROCESSLIST`; InnoDB lock waits:
+  `performance_schema.data_lock_waits` (MySQL 8).
+- `EXPLAIN ANALYZE` (MySQL 8.0.18+): estimated vs. actual rows, and `Using
+  filesort` / `Using temporary` as the sort/spill signals. Refresh statistics
+  with `ANALYZE TABLE`.
+- A "key lookup" here is the secondary-index → primary-key hop; a covering
+  index avoids it (MySQL has no `INCLUDE`; add the columns to the index).

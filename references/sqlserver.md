@@ -79,3 +79,14 @@ NONCLUSTERED` is valid). Naming conventions prefers a non-sequential id
   budget: a query can pass the count budget and still regress badly here on
   plan reuse — worth a note in the plan when a query's input distribution is
   genuinely skewed.
+
+## Diagnosing performance
+
+- Costliest queries: Query Store, DMVs, or Extended Events. What the server
+  waits on: wait stats (`PAGEIOLATCH_*` = I/O, `LCK_M_*` = locks, `WRITELOG` =
+  log flush, `CXPACKET`/`CXCONSUMER` = parallelism).
+- In the plan: key lookups, sorts and spills to tempdb, and estimated vs.
+  actual rows. Index fragmentation rarely explains slowness on SSD — check
+  statistics first.
+- **Lock escalation** (row → page → table) is specific to this engine and a
+  common cause of blocking on large updates.

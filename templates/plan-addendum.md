@@ -154,6 +154,51 @@ Rules:
   place app-side enforcement *is* the guarantee.
 - **Defaults belong in the database**, not only in the ORM, so a raw insert
   stays valid.
+- **Soft delete changes uniqueness.** With `deleted_at`, a plain
+  `UNIQUE (email)` blocks re-registering a deleted user. Make it partial
+  (`WHERE deleted_at IS NULL`) where the engine supports it, state that every
+  read filters deleted rows (a view or ORM default scope), and make hot-path
+  indexes partial on the same predicate.
+- **Case-insensitive uniqueness** (emails, usernames, slugs) is enforced in
+  the database — a unique index on `lower(col)`, a case-insensitive type or
+  collation — not by the app lower-casing before insert.
+
+### Transactions & concurrency
+
+Answer the spec's *Consistency & concurrency* questions here. For each
+operation that writes more than one row, or that two callers could race on:
+
+| Operation | Transaction scope | Concurrency control | On conflict |
+|-----------|-------------------|---------------------|-------------|
+| [e.g. "claim a slot"] | [one tx: check + insert] | [`UNIQUE (slot_id)` + insert; or `SELECT ... FOR UPDATE`; or `version` column] | [return 409 / retry N times] |
+
+Rules:
+
+- **Pick the control deliberately:**
+  - a **constraint** (`UNIQUE`, `CHECK`, exclusion) when the rule can be one —
+    the cheapest and the only race-proof option;
+  - **optimistic locking** (`version` column, `UPDATE ... WHERE id = ? AND
+    version = ?`, 0 rows updated = conflict) for low-contention edits, e.g. a
+    user editing a form;
+  - **pessimistic locking** (`SELECT ... FOR UPDATE`) for high-contention,
+    short critical sections, e.g. decrementing stock.
+- **Isolation level**: the engine default unless this table says otherwise and
+  why. A stricter level (`REPEATABLE READ`, `SERIALIZABLE`) means callers must
+  **retry** on serialization failure.
+- **Deadlocks**: acquire locks in a consistent order (e.g. by primary key) in
+  every code path; treat a deadlock error as retryable.
+- **Retries** are bounded (attempts + backoff) and only wrap operations that
+  are safe to repeat.
+- **Nothing external inside a transaction** — no HTTP call, message publish, or
+  email send while holding locks. Use an outbox table written in the same
+  transaction, then deliver after commit.
+- **Idempotency** for retryable external entry points (payments, webhooks,
+  job handlers): an idempotency key with a `UNIQUE` constraint, so a replay
+  doesn't apply twice.
+- **Timeouts**: statement and lock timeouts are set (per role or per query),
+  so a stuck query fails instead of piling up connections.
+- Keep transactions short: no user think-time, no large batch in one
+  transaction — split it.
 
 ### Data protection
 
@@ -248,7 +293,7 @@ Rules:
   driver's parameter binding.
 - The DB role the app connects as has only the privileges it needs (no `DROP`,
   no `CREATE`, not the table owner) — this caps the blast radius if a hole slips
-  through. Full treatment in the Security section.
+  through. Full treatment in the Data protection section.
 
 > ⚠️ **If any query builds SQL from user input without an allowlist**, record it
 > here with the reason and the mitigation, and get it reviewed. This is a hole
@@ -257,6 +302,40 @@ Rules:
 > | Query building dynamic SQL from input | Why unavoidable | Mitigation (validation, escaping, isolation) |
 > |--------------------------------------|-----------------|---------------------------------------------|
 > | [call site] | [reason] | [how the input is constrained] |
+
+### SQL correctness
+
+These return **wrong results without an error** — check every new query
+against them:
+
+- **NULL semantics**
+  - `col = NULL` / `col <> NULL` is never true → `IS NULL`, `IS NOT NULL`,
+    `IS [NOT] DISTINCT FROM`.
+  - `NOT IN (subquery)` returns no rows if the subquery yields any NULL →
+    use `NOT EXISTS`.
+  - `COUNT(col)` skips NULLs, `COUNT(*)` doesn't; `SUM`/`AVG` ignore NULLs and
+    `SUM` of no rows is NULL → `COALESCE(SUM(x), 0)`.
+  - `WHERE col <> 'x'` silently drops NULL rows — include `OR col IS NULL` if
+    they should match.
+- **Join fan-out**: joining a 1:N relation and then aggregating the "1" side
+  double-counts (`orders JOIN order_lines` then `SUM(orders.shipping)`).
+  Aggregate in a subquery/CTE first, then join.
+- **Deterministic order**: without `ORDER BY` there is no order. Paginated or
+  "latest N" queries order by a unique tie-breaker too (`created_at DESC, id
+  DESC`), or pages skip/repeat rows.
+- **Time ranges**: half-open, `ts >= :start AND ts < :end` — not `BETWEEN`,
+  which includes the upper bound and misses fractional seconds on the last day.
+  Compute day boundaries in the user's time zone, store/compare in UTC.
+- **Integer division**: `1 / 2 = 0` on several engines → cast to `numeric`
+  before dividing a ratio or percentage.
+- **Check-then-act races**: "`SELECT`, if missing then `INSERT`" lets two
+  callers both insert. Use a `UNIQUE` constraint plus an upsert (`INSERT ... ON
+  CONFLICT`, `MERGE`, `INSERT ... ON DUPLICATE KEY`) or catch the unique
+  violation — see Transactions & concurrency.
+- **Set-based, not row-by-row**: one `UPDATE ... FROM` / `INSERT ... SELECT`
+  instead of a cursor or an app loop issuing one statement per row.
+- **`UNION` vs `UNION ALL`**: `UNION` deduplicates (a sort/hash and possibly
+  dropped legitimate duplicates) — use `UNION ALL` unless dedup is intended.
 
 ### Indexing plan
 
@@ -270,6 +349,15 @@ For every query this feature adds to a hot path, name the index that serves it.
 - Composite index column order = equality columns first, then range/sort.
 - No redundant index (one already covered by the leftmost prefix of another).
 - Partial index where the query always filters a small subset (`WHERE deleted_at IS NULL`).
+- **Selectivity**: don't index a low-selectivity column alone (boolean, a
+  3-value status). A full scan is the right plan on a small table or when the
+  query reads a large share of the rows — a scan is not a bug by itself.
+- **Index-friendly predicates**: no function or arithmetic on the indexed
+  column (`WHERE lower(email) = ...`, `WHERE date(created_at) = ...`), no
+  implicit type conversion (comparing a text column to a number), no leading
+  wildcard (`LIKE '%x'`). Rewrite the predicate, or index the expression
+  where the engine supports it.
+- Every extra index costs writes, space, and maintenance — justify each one.
 
 ### N+1 and query volume
 
@@ -278,3 +366,23 @@ For every query this feature adds to a hot path, name the index that serves it.
 - Endpoints returning a list declare a **max query count** budget and are covered by a test that asserts it (query counter / `assert_queries` / echo log).
 - No query inside a loop. No ORM lazy-load left implicit on a serialized path.
 - Pagination is keyset (seek) for large or unbounded lists; `OFFSET` only for small bounded sets.
+- Return only the columns the caller needs — no `SELECT *` on a serialized path.
+
+### Performance diagnosis
+
+When a query is slow, measure before changing anything — and scale hardware last:
+
+1. **Baseline** — record the current timing and row counts.
+2. **Find it** — the costliest queries (`pg_stat_statements`, Query Store,
+   `performance_schema`, AWR) and active sessions.
+3. **What is it waiting on?** — I/O, CPU, locks, or memory (wait events).
+4. **Read the plan** (`EXPLAIN` / `EXPLAIN ANALYZE`) — large scans, sorts or
+   spills to disk, a big gap between estimated and actual rows, join type.
+5. **Check indexes and statistics** — stale statistics produce bad plans.
+6. **Rewrite the query or adjust the index, then re-measure** against the baseline.
+7. Only then consider caching, partitioning, or more hardware. Partitioning
+   helps pruning and archival; it hurts queries that don't filter on the partition key.
+
+Locks and transactions: keep transactions short, and tell *blocking* (waiting
+on a lock) from *deadlock* (cycle, the engine aborts one). The engine file's
+isolation/locking section covers the specifics.

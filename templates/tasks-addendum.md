@@ -22,6 +22,27 @@
 - [ ] Multi-row / multi-table invariants are enforced in a transaction or trigger, and the plan says which and where.
 - [ ] Default values are set in the database, not only in application code.
 - [ ] No placeholder sentinel (`''`, `0`, `1970-01-01`) standing in for "unknown".
+- [ ] With soft delete, `UNIQUE` constraints are partial on `deleted_at IS NULL` (or the plan says why not), and reads filter deleted rows.
+- [ ] Case-insensitive uniqueness (email, username) is enforced by the database.
+
+### Transactions & concurrency
+
+- [ ] Every multi-row write and every raceable operation is in the plan's table, with its transaction scope and concurrency control.
+- [ ] Check-then-insert is replaced by a `UNIQUE` constraint + upsert / caught violation.
+- [ ] Locks are taken in a consistent order; deadlock and serialization errors are retried with a bound.
+- [ ] No HTTP call, message publish, or email inside a transaction (outbox if needed).
+- [ ] Retryable entry points use an idempotency key backed by `UNIQUE`.
+- [ ] Statement / lock timeouts are set.
+
+### SQL correctness
+
+- [ ] No `= NULL` / `<> NULL`; no `NOT IN (subquery)` over a nullable column (use `NOT EXISTS`).
+- [ ] Aggregates handle NULL deliberately (`COUNT(*)` vs `COUNT(col)`, `COALESCE(SUM(...), 0)`).
+- [ ] No aggregate over a 1:N join that double-counts the parent side.
+- [ ] Paginated / "latest N" queries have `ORDER BY` with a unique tie-breaker.
+- [ ] Timestamp ranges are half-open (`>= start AND < end`), not `BETWEEN`.
+- [ ] Ratios/percentages don't rely on integer division.
+- [ ] Bulk changes are set-based, not one statement per row.
 
 ### Normalization
 
@@ -51,6 +72,10 @@ OLAP tables:
 - [ ] List endpoints have a query-count budget with a test asserting it.
 - [ ] No query in a loop; related data is eager/batch loaded.
 - [ ] Large-list pagination is keyset, not `OFFSET`.
+- [ ] No function, arithmetic, or implicit type conversion on an indexed column in `WHERE`/`JOIN`.
+- [ ] Low-selectivity columns aren't indexed alone; each new index is justified.
+- [ ] No `SELECT *` on a serialized path.
+- [ ] A slow query was diagnosed from its plan and a baseline, not guessed at.
 
 ### SQL portability
 

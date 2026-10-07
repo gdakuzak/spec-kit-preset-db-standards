@@ -181,3 +181,13 @@ behavior is the right answer, or where it quietly breaks a generic assumption.
   clients, and note the pooling mode in the plan: transaction pooling breaks
   session state — session-level `SET`, advisory locks (non-xact), `LISTEN`,
   and (older) prepared statements.
+
+## Diagnosing performance
+
+- Costliest queries: `pg_stat_statements`. Active sessions and what they wait
+  on: `pg_stat_activity` (`wait_event_type`, `wait_event`).
+- `EXPLAIN (ANALYZE, BUFFERS)`: compare estimated vs. actual rows; a sort or
+  hash "Disk" / temp-file spill means `work_mem` is too low for that query.
+  Refresh statistics with `ANALYZE`; table/index bloat is handled by vacuum.
+- Plan choice for prepared statements can flip between custom and generic
+  plans (`plan_cache_mode`) — the analogue of parameter sniffing.

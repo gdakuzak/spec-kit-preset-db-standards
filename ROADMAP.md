@@ -5,7 +5,7 @@ tracks what's done and what's next so we can pick up between sessions.
 
 ## Shipped
 
-See `CHANGELOG.md` for the per-version breakdown. Current: **v1.0.0**.
+See `CHANGELOG.md` for the per-version breakdown. Current: **v1.1.1**.
 
 - **speckit.constitution** (command, append) → requires confirming the target
   database (engine, version, migration tool) *(v0.2.0)* and the Data protection
@@ -64,27 +64,49 @@ See `CHANGELOG.md` for the per-version breakdown. Current: **v1.0.0**.
 
 ## Next up
 
-### Backlog (from the menu, roughly priority order)
+### Backlog (priority order)
 
-1. **Migration discipline** — expand-contract, one logical change per migration,
-   no DDL + large backfill in one transaction, `lock_timeout` / `statement_timeout`
-   on DDL, tested rollback, forward-only in prod.
-2. **Data types & precision** — `timestamptz` in UTC, `text` over arbitrary
+1. ~~**Transactions & concurrency**~~ *(shipped v1.1.0)* — deliberate isolation
+   level, optimistic locking (`version` column) vs `SELECT ... FOR UPDATE`,
+   consistent lock order against deadlocks, retry on serialization/deadlock
+   errors, no external (HTTP/queue) call inside a transaction, idempotency keys,
+   statement/lock timeouts.
+2. ~~**SQL correctness**~~ *(shipped v1.1.0)* — queries that return wrong results
+   without erroring: NULL semantics (`NOT IN` + NULL, `= NULL`, `COUNT(col)`),
+   fan-out double counting (join 1:N then `SUM`), deterministic `ORDER BY`
+   with a unique tie-breaker, half-open time ranges instead of `BETWEEN`,
+   integer division, check-then-insert races → `UNIQUE` + upsert, set-based
+   over row-by-row. Includes soft delete × `UNIQUE` (partial on
+   `deleted_at IS NULL`) and case-insensitive uniqueness (email).
+3. ~~**Fixes**~~ *(shipped v1.1.1)* — `plan-addendum` points at a non-existent
+   "Security section" (should be Data protection); README's `plan-template` row
+   misses Performance diagnosis and the v1.1.0 sections.
+4. **Migration discipline** — expand-contract, one logical change per
+   migration, schema compatible with the code version still running, schema
+   deploy separate from code deploy, no DDL + large backfill in one
+   transaction, `lock_timeout` / `statement_timeout` on DDL, tested rollback,
+   forward-only in prod. Absorbs safe column/table removal (stop writing →
+   stop reading → drop).
+5. **Data types & precision** — `timestamptz` in UTC, `text` over arbitrary
    `varchar(n)`, declared `numeric` precision, no nullable boolean, encoding /
-   collation.
-3. **Transactions & concurrency** — short transactions, deliberate isolation
-   level, optimistic locking (`version` column) vs `SELECT FOR UPDATE`,
-   idempotency keys for retryable operations.
+   collation — generic, not only in `postgres.md`.
+6. **Read replicas & lag** — which reads tolerate replication lag, and how
+   read-your-writes is guaranteed when the constitution splits reads off.
+7. **Testing against the real engine** — tests run on the production engine
+   (not SQLite standing in for Postgres), migrations rehearsed on
+   production-sized data, constraints covered by tests.
+8. **Retention mechanism** — the spec asks for a retention rule; the plan
+   should name the purge/archival mechanism (batched delete, partition drop).
+9. **Diagnosing performance for NoSQL** — `dynamodb.md` / `mongodb.md` lack
+   the section the SQL engine files got in v1.0.1.
 
 ### Situational (later, if wanted)
 
-4. Auditing & history (`created_by` / `updated_by`, history / audit-log table).
-5. Safe column/table removal (stop writing → stop reading → drop) — pairs with
-   expand-contract.
-6. Query observability (`EXPLAIN` for hot queries in the plan, slow-query log,
-   query comments for tracing).
-7. JSON / semi-structured columns (when acceptable, schema validation, GIN
-   index, no deep-path access on hot paths).
+10. Auditing & history (`created_by` / `updated_by`, history / audit-log table).
+11. Query observability — beyond v1.0.1's Performance diagnosis: slow-query
+    log thresholds, query comments/tags for tracing back to the call site.
+12. JSON / semi-structured columns (when acceptable, schema validation, GIN
+    index, no deep-path access on hot paths).
 
 ### Done
 
@@ -125,6 +147,26 @@ for the agent to read, it's just never composed into a core template.
 `references/*.md` files themselves; don't duplicate it here. Future
 engine-guidance work (a new engine, or expanding an existing file) is tracked
 as a normal backlog item below, not in this section.
+
+### Planned engine references (not started)
+
+Each would be its own `references/<engine>.md`. Only SQLite fits the existing
+relational model; the rest are written as their own model, like DynamoDB and
+MongoDB, and say plainly which generic sections don't apply.
+
+| Engine | File | Fits the relational `db-standards` model? | Likely covers |
+|--------|------|------|----------------|
+| SQLite | `references/sqlite.md` | Yes | type affinity vs. `STRICT` tables, FKs off unless `PRAGMA foreign_keys=ON`, WAL mode, limited `ALTER TABLE`, single-writer concurrency |
+| ClickHouse | `references/clickhouse.md` | **No** — columnar OLAP | `MergeTree` `ORDER BY`/partition key, no enforced constraints or row-level transactions, batch inserts, mutations are costly, materialized views |
+| BigQuery | `references/bigquery.md` | **No** — columnar warehouse | partition + clustering, cost = bytes scanned (no `SELECT *`), no enforced PK/FK, nested/repeated fields, slot/quota limits |
+| Firestore | `references/firestore.md` | **No** — document NoSQL | collection/subcollection design, per-document limits, automatic vs. composite indexes, security rules, hot-spotting on sequential ids |
+| Redis | `references/redis.md` | **No** — key-value / data structures | key naming, TTL & eviction policy, persistence (RDB/AOF), not a system of record, atomicity (`MULTI`, Lua), big-key/`KEYS` pitfalls |
+| OpenSearch | `references/opensearch.md` | **No** — search engine | explicit mappings, analyzers, shard/replica sizing, not a source of truth, reindex for mapping changes, query-DSL injection |
+| Neo4j | `references/neo4j.md` | **No** — graph | node/relationship modeling, constraints & indexes, Cypher injection (bound params), supernodes, traversal depth limits |
+| Qdrant | `references/qdrant.md` | **No** — vector database | collection config (vector size, distance metric), HNSW/quantization trade-offs, payload indexes, filtering, embedding-model versioning |
+
+The table row's "Likely covers" is a starting scope, not a spec — confirm when
+each one is picked up.
 
 ## Publishing (not started)
 

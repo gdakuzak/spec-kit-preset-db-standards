@@ -3,6 +3,46 @@
 All notable changes to this preset. Versions are tagged `vX.Y.Z` and released on
 GitHub. While on `0.x`, a feature bumps the minor and a fix bumps the patch.
 
+## 1.1.1 — 2026-10-07
+
+### Fixed
+
+- `plan-template` Query safety pointed at a non-existent "Security section";
+  it now points at Data protection.
+- README: the `plan-template` and `tasks-template` rows list the sections
+  added in v1.0.1 and v1.1.0.
+
+## 1.1.0 — 2026-10-07
+
+### Added
+
+- `plan-template`: **Transactions & concurrency** section — per-operation
+  table (transaction scope, concurrency control, conflict handling);
+  constraint vs optimistic vs pessimistic locking; isolation + retry on
+  serialization failure; consistent lock order against deadlocks; no external
+  calls inside a transaction (outbox); idempotency keys; statement/lock
+  timeouts.
+- `plan-template`: **SQL correctness** section — NULL semantics (`= NULL`,
+  `NOT IN` + NULL, aggregates), join fan-out double counting, deterministic
+  `ORDER BY` with a tie-breaker, half-open time ranges, integer division,
+  check-then-act races → upsert, set-based over row-by-row, `UNION` vs
+  `UNION ALL`.
+- `plan-template` Constraints & integrity: soft delete × `UNIQUE` (partial on
+  `deleted_at IS NULL`) and DB-enforced case-insensitive uniqueness.
+- `tasks-template`: matching checklist items and two new checklist sections.
+
+## 1.0.1 — 2026-10-07
+
+### Added
+
+- `plan-template`: selectivity and index-friendly predicates (no function /
+  implicit conversion on the indexed column) in the Indexing plan; `SELECT *`
+  rule; new **Performance diagnosis** section (baseline → costliest queries →
+  waits → plan → indexes/statistics → measure again → hardware last).
+- `tasks-template`: matching Performance checklist items.
+- `references/{postgres,mysql,sqlserver,oracle}.md`: "Diagnosing performance"
+  with each engine's tooling for plans, waits, and statistics.
+
 ## 1.0.0 — 2026-10-07
 
 First stable release. Engine-specific references now cover Oracle, MySQL /
